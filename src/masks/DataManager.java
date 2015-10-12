@@ -3,6 +3,7 @@ package masks;
 import io.FileIO;
 import io.XYChartIO;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.Observable;
 
@@ -20,7 +21,7 @@ import scatter.Statistics;
  * and load that data type into the FileIO and use a switch type system to
  * choose which subclass to use.
  * @author Melinda Robertson
- * @version 20151003
+ * @version 20151011
  */
 public class DataManager extends Observable {
 	
@@ -28,7 +29,6 @@ public class DataManager extends Observable {
 	 * Loads and saves the data.
 	 */
 	private final static FileIO<ObservableList<Data<Number,Number>>,Data<Number, Number>> io = new XYChartIO();
-	
 	/**
 	 * The data.
 	 */
@@ -37,7 +37,6 @@ public class DataManager extends Observable {
 	 * Performs calculations on the data.
 	 */
 	private Statistics<ObservableList<Data<Number, Number>>,Data<Number, Number>> st;
-	
 	/**
 	 * Creates a new DataManager without adding any data
 	 * to the initial set.
@@ -45,15 +44,13 @@ public class DataManager extends Observable {
 	public DataManager() {
 		begin(null);
 	}
-	
 	/**
 	 * Creates the manager with initial data.
 	 * @param data is the x y pair data.
 	 */
-	public DataManager(String filename) {
+	public DataManager(File filename) {
 		begin(filename);
 	}
-	
 	/**
 	 * Retrieve the current data in an observable list as a reference.
 	 * @return the data.
@@ -87,7 +84,6 @@ public class DataManager extends Observable {
 			}
 		}
 	}
-
 	/**
 	 * Retrieve the statistical data calculator.
 	 * @return the data calculator.
@@ -95,38 +91,37 @@ public class DataManager extends Observable {
 	public Statistics<ObservableList<Data<Number, Number>>,Data<Number, Number>> stat() {
 		return st;
 	}
-	
-	public void load(String filename) {
+	/**
+	 * Load the appropriate data structure using the IO object.
+	 * @param filename is the file to load.
+	 */
+	public void load(File filename) {
 		begin(filename);
 	}
-	
-	public void load(String dir, String file) {
-		io.setDir(dir);
-		begin(file);
-	}
-	
+	/**
+	 * Loads the last file accessed.
+	 */
 	public void load() {
 		begin(io.lastfile());
 	}
-	
-	public void cd(String dir) {
-		io.setDir(dir);
-	}
-	
-	public void save(String filename) {
+	/**
+	 * Saves data to the indicated file using the IO object.
+	 * @param filename is the file to save to.
+	 */
+	public void save(File filename) {
 		io.save(filename, data);
 	}
-	
+	/**
+	 * Saves data to the last file accessed.
+	 */
 	public void save() {
 		io.savelast(data);
 	}
-	
-	public void save(String dir, String file) {
-		io.setDir(dir);
-		io.save(file, data);
-	}
-	
-	private void begin(String filename) {
+	/**
+	 * Starting point to overwrite data.
+	 * @param filename is the file to load data from.
+	 */
+	private void begin(File filename) {
 		data = io.load(filename);
 		XYMask m = new XYMask(data);
 		st = new Statistics<ObservableList<Data<Number, Number>>,Data<Number, Number>>(m);

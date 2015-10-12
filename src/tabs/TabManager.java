@@ -16,27 +16,16 @@ public class TabManager extends TabPane {
      * has a list of tabs.
      */
 	private TabBase[] mytabs;
-	/**
-	 * Controls all data flow and updates.
-	 */
-	private final DataManager data;
 	
 	/**
 	 * Initialize and create tab pane and all tabs.
 	 * @param data is the data that the tabs will reference.
 	 */
 	public TabManager(final DataManager dm) {
-		this.data = dm;
 		setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 		
-		//tabs = FXCollections.observableList(new LinkedList<TabBase>());
 		mytabs = new TabBase[4];
-		/*
-		 * getTabs().add(new ChartTab(dm));
-		 * getTabs().add(new SummaryTab(dm));
-		 * getTabs().add(new HistogramTab(dm));
-		 * getTabs().add(new OptionsTab(dm));
-		 */
+		
 		int n = 0;
 		mytabs[n++] = new SummaryTab(dm);
 		mytabs[n++] = new ChartTab(dm);

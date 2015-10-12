@@ -2,28 +2,30 @@ package io;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
-
+/**
+ * Loads and Saves data from an observable list in the following format:
+ * x1,y1
+ * x2,y2
+ * x3,y3
+ * The file can be text or comma delimited.
+ * @author Melinda Robertson
+ * @version 20151011
+ */
 public class XYChartIO implements FileIO<ObservableList<Data<Number, Number>>, Data<Number, Number>> {
 	
 	/**
 	 * The last file that was accessed by this object.
 	 */
-	private String lastfile;
-	/**
-	 * The current directory that this object will look for
-	 * and access files in.
-	 */
-	private Path currentpath;
+	private File lastfile;
 	
 	/**
 	 * Creates a file input/output utility for reading and writing
@@ -32,7 +34,6 @@ public class XYChartIO implements FileIO<ObservableList<Data<Number, Number>>, D
 	 */
 	public XYChartIO(String p) {
 		lastfile = null;
-		currentpath = Paths.get(p);
 	}
 	
 	/**
@@ -41,18 +42,13 @@ public class XYChartIO implements FileIO<ObservableList<Data<Number, Number>>, D
 	 */
 	public XYChartIO() {
 		lastfile = null;
-		currentpath = Paths.get("");
 	}
-	//TODO will be using file chooser so need to change how path is used
-	//probably can still use the currentpath to set up the file chooser
-	//may be good to run it from this class
+
 	@Override
-	public ObservableList<Data<Number, Number>> load(String path) {
+	public ObservableList<Data<Number, Number>> load(File path) {
 		ObservableList<XYChart.Data<Number, Number>> data = FXCollections.observableArrayList();
 		if(path == null) return data;
-		if(!path.equals(lastfile))
-			lastfile = currentpath.toAbsolutePath() + path;
-		try(BufferedReader br = new BufferedReader(new FileReader(lastfile))) {
+		try(BufferedReader br = new BufferedReader(new FileReader(path))) {
 			//iterate through each line
 			String line;
 			double x, y;
@@ -73,15 +69,14 @@ public class XYChartIO implements FileIO<ObservableList<Data<Number, Number>>, D
 			System.out.println("Wrong line format.");
 			e.printStackTrace();
 		}
+		lastfile = path;
 		return data;
 	}
 
 	@Override
-	public void save(String path, ObservableList<Data<Number, Number>> list) {
+	public void save(File path, ObservableList<Data<Number, Number>> list) {
 		if(path == null) return;
-		if(!path.equals(lastfile))
-			lastfile = this.currentpath.toAbsolutePath() + path;
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter(lastfile))) {
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
 			for(Data<Number, Number> d: list) {
 				bw.write(d.getXValue() + "," + d.getYValue() + "\n");
 			}
@@ -89,10 +84,11 @@ public class XYChartIO implements FileIO<ObservableList<Data<Number, Number>>, D
 			System.out.println("There was an error writing the file.");
 			e.printStackTrace();
 		}
+		lastfile = path;
 	}
 
 	@Override
-	public String lastfile() {
+	public File lastfile() {
 		return lastfile;
 	}
 
@@ -105,10 +101,4 @@ public class XYChartIO implements FileIO<ObservableList<Data<Number, Number>>, D
 	public void savelast(ObservableList<Data<Number, Number>> list) {
 		save(lastfile, list);
 	}
-
-	@Override
-	public void setDir(String directory) {
-		currentpath = Paths.get(directory);
-	}
-
 }
