@@ -1,5 +1,8 @@
 package scatter;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -18,17 +21,42 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import masks.DataManager;
 
-public class TableBox extends VBox {
+/**
+ * This holds the x y table that list all the related data points.
+ * May have made errors on how the data is maintained. Once I get this
+ * started...
+ * TODO check to see if data is being updated correctly, I set the table
+ * to be edited directly so I might remove the buttons if it works out.
+ * @author Melinda Robertson
+ * @version 20151015
+ */
+public class TableBox extends VBox implements Observer {
 	
+    /**
+     * The table to hold x y pairs.
+     */
 	private TableView<XYChart.Data<Number, Number>> table;
+	/**
+	 * Manages the data. Although the data manager is an observer,
+	 * it has values that needs to be manipulated by this object
+	 * so it is included here for convenience.
+	 */
 	private DataManager data;
 
+	/**
+	 * Constructs a two column table of x y pairs.
+	 * @param dm is the DataManager object that holds all the data.
+	 */
 	public TableBox(DataManager dm) {
+	    data = dm;
+	    data.addObserver(this);
 		this.setPadding(new Insets(10, 2, 2, 10));
 		
 		Label label = new Label("X|Y Table");		
 		
 		table = new TableView<XYChart.Data<Number, Number>>();
+		table.setItems(data.getData());
+		table.setEditable(true);
 		ScrollPane scpane = new ScrollPane(table);
 		scpane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		
@@ -68,6 +96,12 @@ public class TableBox extends VBox {
 		this.getChildren().addAll(label, scpane, buildAddPane());
 	}
 	
+	/**
+	 * Creates a pane for the add/delete buttons and text fields.
+	 * After testing this may be removed in favor of editing the table
+	 * directly.
+	 * @return an HBox with two text fields and two buttons.
+	 */
 	private HBox buildAddPane() {
 		HBox box = new HBox();
 		
@@ -103,4 +137,11 @@ public class TableBox extends VBox {
 		
 		return box;
 	}
+
+    @Override
+    public void update(Observable data, Object list) {
+        if(!(data instanceof DataManager)) return;
+        this.data = (DataManager) data;
+        table.setItems(this.data.getData());
+    }
 }

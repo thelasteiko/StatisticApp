@@ -1,5 +1,7 @@
 package tabs;
 
+import java.util.LinkedList;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.BarChart;
@@ -27,10 +29,6 @@ import masks.DataManager;
  */
 public class HistogramTab extends TabBase {
     
-    /**
-     * Holds the necessary information.
-     */
-    private DataManager data;
     /**
      * The histogram.
      */
@@ -118,6 +116,7 @@ public class HistogramTab extends TabBase {
         barchart = new BarChart<>(xAxis, yAxis);
         xAxis.setLabel("Frequency Bands");  //the bottom; String
         yAxis.setLabel("Number of Data Points");   //the side; Numbers
+        buckets = FXCollections.observableList(new LinkedList<Data<String, Number>>());
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.getData().addAll(buckets);
         barchart.getData().add(series);

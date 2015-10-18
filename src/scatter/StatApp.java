@@ -23,13 +23,14 @@ public class StatApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Scatter Chart");
-
+        //-----------Data--------------------
         data = new DataManager();
 
         Group root = new Group();
         Scene scene = new Scene(root);
-        BorderPane mainholder = new BorderPane();
         
+        //----------Components----------------------
+        BorderPane mainholder = new BorderPane();
         StatMenu menu = new StatMenu(data);
         TableBox table = new TableBox(data);
         TabManager tm = new TabManager(data);
@@ -37,13 +38,15 @@ public class StatApp extends Application {
         mainholder.setTop(menu);
         mainholder.setLeft(table);
         mainholder.setCenter(tm);
+        root.getChildren().add(mainholder);
         
         //TODO have a way to load different stylesheets?
         //TODO compact stylesheets
         scene.getStylesheets().add(getClass().getResource("linechart.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("scatter.css").toExternalForm());
         
-        stage.show();
+        stage.setScene(scene);
+        stage.show();   //TODO this breaks for some reason but not all the time
     }
 
     /**

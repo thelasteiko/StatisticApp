@@ -15,11 +15,10 @@ import scatter.Statistics;
 /**
  * Manages the data for display in various JavaFX tables and charts.
  * So in the future it would be nice for this to have optional data type displays.
- * That is, use the FileIO class that suits the type of data needed.
- * Right now I have no idea what other type I need...
- * but to make it that way I need to have a generic type for this class
- * and load that data type into the FileIO and use a switch type system to
- * choose which subclass to use.
+ * 
+ * TODO I changed this to an observable so that it can update listeners
+ * when the data updates but I need to research what the notify methods
+ * actually do.
  * @author Melinda Robertson
  * @version 20151011
  */
@@ -67,6 +66,8 @@ public class DataManager extends Observable {
 		if (data == null) return;
 		XYChart.Data<Number, Number> e = new XYChart.Data<Number, Number>(x, y);
 		data.add(e);
+		setChanged();
+		notifyObservers();
 	}
 	/**
 	 * Finds and removes the first occurrence of the given x y pair.
@@ -80,9 +81,11 @@ public class DataManager extends Observable {
 			Data<Number, Number> temp = it.next();
 			if((Double) temp.getXValue() == x && (Double) temp.getYValue() == y) {
 				it.remove();
+				setChanged();
 				break;
 			}
 		}
+		notifyObservers();
 	}
 	/**
 	 * Retrieve the statistical data calculator.
@@ -125,5 +128,7 @@ public class DataManager extends Observable {
 		data = io.load(filename);
 		XYMask m = new XYMask(data);
 		st = new Statistics<ObservableList<Data<Number, Number>>,Data<Number, Number>>(m);
+		setChanged();
+		notifyObservers();
 	}
 }

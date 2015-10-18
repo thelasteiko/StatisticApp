@@ -38,10 +38,7 @@ public class ChartTab extends TabBase {
 	 * The line chart. Using a stylesheet to display both data points and a line on the same graph.
 	 */
 	private final LineChart<Number, Number> chart = new LineChart<Number, Number>(xAxis, yAxis);
-	/**
-	 * The manager for all data in the application.
-	 */
-	private DataManager data;
+
 	/**
 	 * Creates a pane to view the chart in.
 	 * @param dm holds the data the chart uses.

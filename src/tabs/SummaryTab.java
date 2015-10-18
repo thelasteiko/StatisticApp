@@ -33,11 +33,6 @@ public class SummaryTab extends TabBase {
 	private ObservableList<Text> display;
 
 	/**
-	 * The manager for the data.
-	 */
-	private DataManager data;
-
-	/**
 	 * Creates a summary frame for the data provided
 	 * by the DataManager.
 	 * @param dm is the DataManager.
@@ -81,12 +76,13 @@ public class SummaryTab extends TabBase {
 			display.add(text2);
 		}
 		setContent(calcBox);
-		update();
+		//update();
 	}
 	
 	/**
 	 * Updates the text in the calcBox.
 	 */
+	@Override
 	public void update() {
 		set(0, f(data.stat().n()));
 		set(1, f(data.stat().n()));
