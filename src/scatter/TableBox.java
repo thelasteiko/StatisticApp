@@ -13,6 +13,7 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+//import javafx.scene.control.TableCell;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+//import javafx.util.Callback;
 import masks.DataManager;
 
 /**
@@ -50,6 +52,7 @@ public class TableBox extends VBox implements Observer {
      * 
      * @param dm is the DataManager object that holds all the data.
      */
+    @SuppressWarnings("unchecked")
     public TableBox(DataManager dm) {
         data = dm;
         data.addObserver(this);
@@ -64,6 +67,13 @@ public class TableBox extends VBox implements Observer {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         ScrollPane scpane = new ScrollPane(table);
         scpane.setHbarPolicy(ScrollBarPolicy.NEVER);
+        
+//        Callback<TableColumn<Data<Number, Number>, Double>, TableCell<Data<Number, Number>, Double>> cellFactory =
+//                new Callback<TableColumn<Data<Number, Number>, Double>, TableCell<Data<Number, Number>, Double>>() {
+//                    public TableCell<Data<Number, Number>, Double> call(TableColumn<XYChart.Data<Number, Number>, Double> p) {
+//                        return new EditableTableCell();
+//                    }
+//                };
 
         TableColumn<XYChart.Data<Number, Number>, Double> xCol = new TableColumn<XYChart.Data<Number, Number>, Double>(
                 "X");
@@ -71,6 +81,7 @@ public class TableBox extends VBox implements Observer {
         //xCol.setMinWidth(50);
         xCol.setCellValueFactory(new PropertyValueFactory<XYChart.Data<Number, Number>, Double>(
                 "XValue"));
+        //xCol.setCellFactory(cellFactory);
         xCol.setOnEditCommit(new EventHandler<CellEditEvent<XYChart.Data<Number, Number>, Double>>() {
 
             @Override
@@ -89,6 +100,7 @@ public class TableBox extends VBox implements Observer {
         //yCol.setMinWidth(50);
         yCol.setCellValueFactory(new PropertyValueFactory<XYChart.Data<Number, Number>, Double>(
                 "YValue"));
+        //yCol.setCellFactory(cellFactory);
         yCol.setOnEditCommit(new EventHandler<CellEditEvent<XYChart.Data<Number, Number>, Double>>() {
 
             @Override
@@ -165,7 +177,7 @@ public class TableBox extends VBox implements Observer {
     @Override
     public void update(Observable data, Object list) {
         if (!(data instanceof DataManager)) return;
-        //this.data = (DataManager) data;
-        //table.setItems(this.data.getData());
+        this.data = (DataManager) data;
+        table.setItems(this.data.getData());
     }
 }

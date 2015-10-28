@@ -1,6 +1,7 @@
 package scatter;
 
 import java.io.File;
+import java.io.IOException;
 
 import javafx.application.Platform;
 import javafx.scene.control.Menu;
@@ -65,9 +66,15 @@ public class StatMenu extends MenuBar {
      */
     private void saveAction() {
         FileChooser fc = new FileChooser();
+        try {
+            fc.setInitialDirectory(new File(".").getCanonicalFile());
+        } catch (IOException e) {
+            System.out.println("Could not find directory.");
+            //e.printStackTrace();
+        }
         fc.getExtensionFilters().addAll(
-                new ExtensionFilter("Text Files", "*.txt"),
                 new ExtensionFilter("Comma Separated", "*.csv"),
+                new ExtensionFilter("Text Files", "*.txt"),
                 new ExtensionFilter("All Files", "*"));
         File savefile = fc.showSaveDialog(null);
         data.save(savefile);
@@ -77,12 +84,18 @@ public class StatMenu extends MenuBar {
      */
     public void loadAction() {
         FileChooser fc = new FileChooser();
+        try {
+            fc.setInitialDirectory(new File(".").getCanonicalFile());
+        } catch (IOException e) {
+            System.out.println("Could not find directory.");
+            //e.printStackTrace();
+        }
         fc.getExtensionFilters().addAll(
-                new ExtensionFilter("Text Files", "*.txt"),
                 new ExtensionFilter("Comma Separated", "*.csv"),
+                new ExtensionFilter("Text Files", "*.txt"),
                 new ExtensionFilter("All Files", "*"));
         File loadfile = fc.showOpenDialog(null);
-        data.save(loadfile);
+        data.load(loadfile);
     }
 
 }

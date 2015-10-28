@@ -59,7 +59,9 @@ public class XYChartIO implements FileIO<ObservableList<Data<Number, Number>>, D
 					x = Double.parseDouble(line.substring(0, i));
 					y = Double.parseDouble(line.substring(i+1));
 					Data<Number, Number> e = new Data<Number, Number>(x, y);
+					//System.out.println(n + ": " + e.getXValue() + "," + e.getYValue());
 					data.add(e);
+					//n++;
 				}
 			}
 		} catch (IOException e) {
