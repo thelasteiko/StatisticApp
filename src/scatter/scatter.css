@@ -1,5 +1,5 @@
+/*summary gridpane with text fields*/
 .grid {
-	-fx-background-color: white;
     -fx-background-radius: 5.0;
     -fx-background-insets: 0.0 5.0 0.0 5.0;
     -fx-padding: 10 10 10 10;
@@ -7,47 +7,69 @@
     -fx-vgap: 10;
 }
 
+/*all charts' looks*/
 .chart-plot-background {
-	-fx-background-color: green;
+	-fx-background-color: LightSlateGray;
 }
-
 .chart-vertical-grid-lines {
-	-fx-stroke: white;
+	-fx-stroke: LemonChiffon;
 }
-
 .chart-horizontal-grid-lines {
-	-fx-stroke: white;
+	-fx-stroke: LemonChiffon;
 }
-
 .chart-vertical-zero-line {
-	-fx-stroke: black;
+	-fx-stroke: FireBrick;
+}
+.chart-horizontal-zero-line {
+	-fx-stroke: FireBrick;
 }
 
-.chart-vertical-zero-line {
-	-fx-stroke: black;
+/*for the line and scatter plot*/
+.chart-line-symbol {
+	-fx-background-color: white, white;
+}
+.chart-series-line {
+	-fx-stroke: LightSkyBlue;
+}
+.default-color0.chart-series-line {
+	-fx-stroke: transparent;
+}
+.default-color1.chart-line-symbol { 
+    -fx-background-color: transparent, transparent;
 }
 
+/*outside the chart but in the panel*/
 .chart {
 	-fx-background-color: LemonChiffon;
-	-fx-font-size: 12px;
 }
-
 .axis {
 	-fx-tick-label-fill: black;
 }
-
 .axis-label {
 	-fx-text-fill: black;
 	-fx-font-weight: bold;
 	-fx-font-size: 20px;
 }
+/*bar chart series color*/
+.default-color0.chart-bar {
+	-fx-bar-fill: LightSkyBlue;
+}
 
+
+/*default on labels*/
 .label {
-	-fx-font-family: "Lucida Console";
-	-fx-font-size: 16px;
+	-fx-stroke: LightSlateGray;
 }
 
 .border-pane {
 	-fx-background-color: LemonChiffon;
 	-fx-padding: 10, 2, 2, 10;
+	-fx-font-size: 14px;
 }
+
+.all {
+	-fx-background-color: LemonChiffon;
+	-fx-font-family: "Lucida Console";
+	-fx-font-size: 20px;
+}
+

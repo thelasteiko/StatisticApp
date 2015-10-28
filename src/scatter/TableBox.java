@@ -20,6 +20,8 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 //import javafx.util.Callback;
@@ -56,6 +58,8 @@ public class TableBox extends VBox implements Observer {
     public TableBox(DataManager dm) {
         data = dm;
         data.addObserver(this);
+        this.getStyleClass().add("all");
+        this.getStyleClass().add("border-pane");
         this.setPadding(new Insets(10, 2, 2, 10));
 
         Label label = new Label("X|Y Table");
@@ -148,9 +152,21 @@ public class TableBox extends VBox implements Observer {
                 }
                 xField.clear();
                 yField.clear();
+                xField.requestFocus();
             }
 
         });
+        addBtn.addEventFilter(KeyEvent.KEY_RELEASED,
+                new EventHandler<KeyEvent>() {
+
+                    @Override
+                    public void handle(KeyEvent arg0) {
+                        if (KeyCode.ENTER.equals(arg0.getCode())) {
+                            addBtn.fire();
+                        }
+                    }
+
+                });
 
         final Button rmBtn = new Button("Remove");
         rmBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -164,8 +180,18 @@ public class TableBox extends VBox implements Observer {
                 }
                 xField.clear();
                 yField.clear();
+                xField.requestFocus();
             }
         });
+        rmBtn.addEventFilter(KeyEvent.KEY_RELEASED,
+                new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent e) {
+                        if (KeyCode.ENTER.equals(e.getCode())) {
+                            rmBtn.fire();
+                        }
+                    }
+                });
 
         box.setSpacing(5);
         box.setPadding(new Insets(10, 0, 0, 10));

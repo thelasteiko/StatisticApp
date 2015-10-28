@@ -72,7 +72,7 @@ public class XYMask implements
                 x[i++] = (Double) d.getYValue() * (Double) d.getYValue();
             break;
         }
-        Arrays.sort(x);
+        //Arrays.sort(x);
         return x;
     }
     
@@ -130,7 +130,7 @@ public class XYMask implements
             double y = value(d, c2);
             xy[i++] = x * y;
         }
-        Arrays.sort(xy);
+        //Arrays.sort(xy);
         return xy;
     }
 

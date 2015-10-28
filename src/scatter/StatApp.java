@@ -42,7 +42,8 @@ public class StatApp extends Application {
         
         //TODO have a way to load different stylesheets?
         //TODO compact stylesheets
-        scene.getStylesheets().add(getClass().getResource("linechart.css").toExternalForm());
+        setUserAgentStylesheet(STYLESHEET_MODENA);
+        //scene.getStylesheets().add(getClass().getResource("linechart.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("scatter.css").toExternalForm());
         
         stage.setScene(scene);

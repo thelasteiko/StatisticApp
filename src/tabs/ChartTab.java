@@ -44,7 +44,7 @@ public class ChartTab extends TabBase {
 	 * @param dm holds the data the chart uses.
 	 */
 	public ChartTab(DataManager dm) {
-		data = dm;
+		super(dm);
 		setText("XY Chart");
 		xAxis.setSide(Side.BOTTOM);
 		xAxis.setLabel("X");
@@ -63,9 +63,11 @@ public class ChartTab extends TabBase {
 	 * This means I need to update the line series with just two new
 	 * points which are the result of the min and max x values plugged
 	 * into the regression line.
+	 * But I should also update the scatter plot data when it updates...
 	 */
 	@Override
 	public void update() {
+	    scatter.setData(data.getData());
 	    line.getData().clear();
 		double min = data.stat().min(XYMask.X);
 		double max = data.stat().max(XYMask.X);

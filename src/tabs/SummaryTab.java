@@ -38,11 +38,12 @@ public class SummaryTab extends TabBase {
 	 * @param dm is the DataManager.
 	 */
 	public SummaryTab(DataManager dm) {
-		data = dm;
+		super(dm);
 		setText("Summary");
 
 		// Layout things.
 		calcBox = new GridPane();
+	    calcBox.getStyleClass().add("all");
 		calcBox.getStyleClass().add("grid");
 		calcBox.getColumnConstraints().add(new ColumnConstraints(100));	//col 1
 		calcBox.getColumnConstraints().add(new ColumnConstraints(100)); //col 2
@@ -64,6 +65,8 @@ public class SummaryTab extends TabBase {
 		calcBox.add(new Label("Q3:"), 0, n++);
 		calcBox.add(new Label("Max:"), 0, n++);
 		
+		calcBox.add(new Label("Equation:"), 0, n++);
+		
 		//-------------DISPLAY FIELDS-----------------
 		display = FXCollections.observableArrayList();
 		for (int i = 1; i <= NUMBER_LINES; i++) {
@@ -75,6 +78,9 @@ public class SummaryTab extends TabBase {
 			calcBox.add(text2, 2, i);
 			display.add(text2);
 		}
+		Text equ = new Text();
+		calcBox.add(equ, 1, display.size()+1);
+		display.add(equ);
 		setContent(calcBox);
 		//update();
 	}
@@ -104,6 +110,7 @@ public class SummaryTab extends TabBase {
 		set(17, f(data.stat().q3(XYMask.Y)));
 		set(18, f(data.stat().max(XYMask.X)));//max 18 19
 		set(19, f(data.stat().max(XYMask.Y)));
+		set(20, "y = " + f(data.stat().b(XYMask.X, XYMask.Y)) + "x + " + f(data.stat().a(XYMask.X, XYMask.Y)));
 	}
 	
 	/**
