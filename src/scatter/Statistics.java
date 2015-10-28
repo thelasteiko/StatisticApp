@@ -9,7 +9,7 @@ import masks.StatMask;
  * Calculates statistics from XYChart data that are numbers.
  * 
  * @author Melinda Robertson
- * @version 20151007
+ * @version 20151026
  */
 public class Statistics<T extends Collection<E>, E> {
 
@@ -184,9 +184,9 @@ public class Statistics<T extends Collection<E>, E> {
         double sumx = this.sum(input);
         double sumy = this.sum(output);
         double sumxy = sum(multiply(input, output));
-        double sumx2 = this.sum(multiply(input, output));
-        double a = (sumy * sumx2 - sumx * sumxy)
-                / (n() * sumx2 - Math.pow(sumx, 2));
+        double sumx2 = this.sum(multiply(input, input));
+        double a = ((sumy * sumx2) - (sumx * sumxy))
+                / ((input.length * sumx2) - (Math.pow(sumx, 2)));
         return a;
     }
     
@@ -223,8 +223,8 @@ public class Statistics<T extends Collection<E>, E> {
         double sumy = this.sum(output);
         double sumxy = this.sum(multiply(input, output));
         double sumx2 = this.sum(multiply(input, input));
-        double b = (n() * sumxy - sumx * sumy)
-                / (n() * sumx2 - Math.pow(sumx, 2));
+        double b = (input.length * sumxy - sumx * sumy)
+                / (input.length * sumx2 - Math.pow(sumx, 2));
         return b;
     }
     
@@ -383,13 +383,14 @@ public class Statistics<T extends Collection<E>, E> {
 
     /**
      * Calculate the number of buckets given the desired size
-     * of each one.
+     * of each one or the size of each one given the buckets.
      * @param c is the number of the data set from the StatMask.
      * @param s is the desired size of the buckets or the number of buckets.
-     * @return the number of buckets.
+     * @return the number of buckets or the size of the buckets.
      */
-    public int transform(int c, int s) {
-        return (int) (max(c) - min(c)) / s + 1;
+    public double transform(int c, double s) {
+        double diff = max(c) - min(c); 
+        return diff / s + diff / n();
     }
 
     /**
@@ -400,7 +401,7 @@ public class Statistics<T extends Collection<E>, E> {
      * @param b is the bucket number starting at 0 and going to the maximum number of buckets.
      * @return the lower bound for the bucket.
      */
-    public double bound(int c, int s, int b) {
+    public double bound(int c, double s, int b) {
         return b * s + min(c);
     }
 
@@ -413,7 +414,7 @@ public class Statistics<T extends Collection<E>, E> {
      *          0 <= b < B
      * @return the number of data points in the bucket.
      */
-    public int numberof(int c, int s, int b) {
+    public int numberof(int c, double s, int b) {
         double[] a = data.col(c);
         int count = 0;
         double r1 = bound(c, s, b);

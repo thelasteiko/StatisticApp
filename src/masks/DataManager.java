@@ -16,9 +16,6 @@ import scatter.Statistics;
  * Manages the data for display in various JavaFX tables and charts.
  * So in the future it would be nice for this to have optional data type displays.
  * 
- * TODO I changed this to an observable so that it can update listeners
- * when the data updates but I need to research what the notify methods
- * actually do.
  * @author Melinda Robertson
  * @version 20151011
  */

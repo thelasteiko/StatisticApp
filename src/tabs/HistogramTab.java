@@ -1,9 +1,12 @@
 package tabs;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.LinkedList;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Side;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -55,9 +58,11 @@ public class HistogramTab extends TabBase {
     public HistogramTab(DataManager dm) {
         data = dm;
         setText("Histogram");
+        
         HBox mainholder = new HBox();
-        buildFields();
         buildChart();
+        buildFields();
+        
         mainholder.getChildren().addAll(barchart, fieldbox);
         setContent(mainholder);
         
@@ -91,7 +96,7 @@ public class HistogramTab extends TabBase {
             int col = setlist.getSelectionModel().getSelectedIndex();
             number.setText(String.valueOf(
                     data.stat().transform(
-                            col, Integer.parseInt(size.getText()))));
+                            col, Double.parseDouble(size.getText()))));
             update();
         });
         number.setOnAction((observable) -> {
@@ -107,18 +112,21 @@ public class HistogramTab extends TabBase {
     /**
      * Creates the bar chart and set the series.
      */
-    private void buildChart() {
+    private void buildChart() {        
         //So I have one axis with named things
-        final CategoryAxis xAxis = new CategoryAxis();
+        final CategoryAxis bounds = new CategoryAxis();
+        bounds.setSide(Side.BOTTOM);
+        bounds.setLabel("Frequency Bands");  //the bottom; String
         //and one axis with numbers
-        final NumberAxis yAxis = new NumberAxis();
+        final NumberAxis frequencies = new NumberAxis();
+        frequencies.setSide(Side.LEFT);
+        frequencies.setLabel("Number of Data Points");   //the side; Numbers
+        
         //which I add to my chart making sure that the axis' line up with the data type
-        barchart = new BarChart<>(xAxis, yAxis);
-        xAxis.setLabel("Frequency Bands");  //the bottom; String
-        yAxis.setLabel("Number of Data Points");   //the side; Numbers
+        barchart = new BarChart<String, Number>(bounds, frequencies);
         buckets = FXCollections.observableList(new LinkedList<Data<String, Number>>());
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.getData().addAll(buckets);
+        series.setData(buckets);
         barchart.getData().add(series);
     }
 
@@ -126,20 +134,25 @@ public class HistogramTab extends TabBase {
     public void update() {
         buckets.clear();    //clear the current list
         //defaults showing all values in one bar
-        int s = data.stat().n(), n = 1;
+        //s is size of buckets
+        double s = data.stat().n();
+        //n is number of buckets
+        int n = 1;
         int col = setlist.getSelectionModel().getSelectedIndex();
         //fields will change when
-        //the fields are updated then this will be called
+        //the fields are updated then this will be called        
         if (size.getText().isEmpty() && number.getText().isEmpty()) return;
-        else if (size.getText().isEmpty()) {    //get size from number    
+        else if (size.getText().isEmpty()) {    //get size from number
             n = Integer.parseInt(number.getText());
             s = data.stat().transform(col, n);
         } else {
-            s = Integer.parseInt(size.getText());   //size makes number
-            n = data.stat().transform(col, s);
+            s = Double.parseDouble(size.getText());   //size makes number
+            n = (int) data.stat().transform(col, s) + 1;
         }
+        NumberFormat DF = new DecimalFormat("#0.#");
         for (int b = 0; b < n; b++) {   //fill data with the frequencies
-            String str = data.stat().bound(col, s, b) + " - " + data.stat().bound(col, s, b+1);
+            //TODO need to format this for decimals
+            String str = DF.format(data.stat().bound(col, s, b)) + " - " + DF.format(data.stat().bound(col, s, b+1));
             buckets.add(new Data<String, Number>(str, data.stat().numberof(col, s, b)));
         }
     }

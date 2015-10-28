@@ -46,7 +46,7 @@ public class StatApp extends Application {
         scene.getStylesheets().add(getClass().getResource("scatter.css").toExternalForm());
         
         stage.setScene(scene);
-        stage.show();   //TODO this breaks for some reason but not all the time
+        stage.show();
     }
 
     /**
