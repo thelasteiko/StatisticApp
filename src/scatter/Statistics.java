@@ -218,6 +218,7 @@ public class Statistics<T extends Collection<E>, E> {
     public double b(int input, int output) {
         return b(data.col(input), data.col(output));
     }
+    //TODO change the sorting of values...
     public double b(double[] input, double[] output) {
         double sumx = this.sum(input);
         double sumy = this.sum(output);
@@ -290,7 +291,7 @@ public class Statistics<T extends Collection<E>, E> {
      * @return the minimum.
      */
     public double min(int c) {
-        return data.col(c)[0];
+        return min(data.col(c));
     }
     
     /**
@@ -304,8 +305,7 @@ public class Statistics<T extends Collection<E>, E> {
     }
 
     public double max(int c) {
-        double[] a = data.col(c);
-        return a[a.length - 1];
+        return max(data.col(c));
     }
     
     public double max(double[] a) {
@@ -317,6 +317,7 @@ public class Statistics<T extends Collection<E>, E> {
         return q1(data.col(c));
     }
     public double q1(double[] a) {
+        Arrays.sort(a);
         if(a.length <= 3) return a[0];
         int m, q1a, q1b;
         if (a.length % 2 == 0) m = a.length / 2 - 1;
@@ -336,6 +337,7 @@ public class Statistics<T extends Collection<E>, E> {
         return q3(data.col(c));
     }
     public double q3(double[] a) {
+        Arrays.sort(a);
         if (a.length == 1) return a[0];
         if (a.length == 2) return a[1];
         if (a.length == 3) return a[2];
@@ -416,6 +418,7 @@ public class Statistics<T extends Collection<E>, E> {
      */
     public int numberof(int c, double s, int b) {
         double[] a = data.col(c);
+        Arrays.sort(a);
         int count = 0;
         double r1 = bound(c, s, b);
         double r2 = bound(c, s, b + 1);

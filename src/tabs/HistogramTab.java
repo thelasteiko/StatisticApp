@@ -56,12 +56,14 @@ public class HistogramTab extends TabBase {
      * @param dm is the data manager holding the pertinent data.
      */
     public HistogramTab(DataManager dm) {
-        data = dm;
+        super(dm);
         setText("Histogram");
         
         HBox mainholder = new HBox();
         buildChart();
         buildFields();
+        
+        barchart.setLegendVisible(false);
         
         mainholder.getChildren().addAll(barchart, fieldbox);
         setContent(mainholder);
@@ -88,15 +90,15 @@ public class HistogramTab extends TabBase {
         //-------------FIELDS----------------------
         Label lblsize = new Label("Size of Bars");
         size = new TextField();        
-        Label lblnum = new Label("Number of Divisions");
+        Label lblnum = new Label("Number of Bars");
         number = new TextField();
         
         //-------------Action Listeners-----------------------
         size.setOnAction((observable) -> {
             int col = setlist.getSelectionModel().getSelectedIndex();
             number.setText(String.valueOf(
-                    data.stat().transform(
-                            col, Double.parseDouble(size.getText()))));
+                    (int) data.stat().transform(
+                            col, Double.parseDouble(size.getText()))+1));
             update();
         });
         number.setOnAction((observable) -> {
@@ -134,11 +136,11 @@ public class HistogramTab extends TabBase {
     public void update() {
         buckets.clear();    //clear the current list
         //defaults showing all values in one bar
-        //s is size of buckets
-        double s = data.stat().n();
         //n is number of buckets
         int n = 1;
         int col = setlist.getSelectionModel().getSelectedIndex();
+      //s is size of buckets
+        double s = data.stat().max(col)-data.stat().min(col);
         //fields will change when
         //the fields are updated then this will be called        
         if (size.getText().isEmpty() && number.getText().isEmpty()) return;
@@ -151,7 +153,7 @@ public class HistogramTab extends TabBase {
         }
         NumberFormat DF = new DecimalFormat("#0.#");
         for (int b = 0; b < n; b++) {   //fill data with the frequencies
-            //TODO need to format this for decimals
+            //TODO why aren't the strings showing when I change the size?
             String str = DF.format(data.stat().bound(col, s, b)) + " - " + DF.format(data.stat().bound(col, s, b+1));
             buckets.add(new Data<String, Number>(str, data.stat().numberof(col, s, b)));
         }
