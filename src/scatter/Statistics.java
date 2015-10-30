@@ -391,7 +391,14 @@ public class Statistics<T extends Collection<E>, E> {
      * @return the number of buckets or the size of the buckets.
      */
     public double transform(int c, double s) {
-        double diff = max(c) - min(c); 
+        //TODO reevaluate how diff is calculated, does not work well with whole numbers
+        /*
+         * If diff is < 2
+         *  diff / s + diff / n()
+         * else
+         *  diff / s + 1
+         */
+        double diff = Math.abs(max(c) - min(c));
         return diff / s + diff / n();
     }
 

@@ -54,6 +54,16 @@ public class DataManager extends Observable {
 	public ObservableList<XYChart.Data<Number, Number>> getData() {
 		return data;
 	}
+	
+	public void clear() {
+	    data.clear();
+	    setChanged();
+	    notifyObservers();
+	}
+	
+	public boolean empty() {
+	    return data.size() == 0;
+	}
 	/**
 	 * Adds a new x y pair to the data set.
 	 * @param x is the x coordinate.

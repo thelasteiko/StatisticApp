@@ -61,9 +61,10 @@
 	-fx-stroke: LightSlateGray;
 }
 
-.border-pane {
+.table-box {
 	-fx-background-color: LemonChiffon;
 	-fx-padding: 10, 2, 2, 10;
+	-fx-font-family: "Lucida Console";
 	-fx-font-size: 14px;
 }
 

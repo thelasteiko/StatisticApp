@@ -27,6 +27,10 @@ import masks.DataManager;
  *  ComboBox
  *  x2 TextFields
  *  BarChart
+ *  TODO the chart works basically but needs tweaking on functions
+ *      the labels don't work well
+ *      the number of buckets or the size isn't matching up to what they should be
+ *      presumably because I changed the +1 on transform...
  * @author Melinda Robertson
  * @version 20151008
  */
@@ -135,6 +139,7 @@ public class HistogramTab extends TabBase {
     @Override
     public void update() {
         buckets.clear();    //clear the current list
+        if(data.empty()) return;
         //defaults showing all values in one bar
         //n is number of buckets
         int n = 1;

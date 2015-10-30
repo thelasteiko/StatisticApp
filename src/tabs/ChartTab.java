@@ -37,7 +37,7 @@ public class ChartTab extends TabBase {
 	/**
 	 * The line chart. Using a stylesheet to display both data points and a line on the same graph.
 	 */
-	private final LineChart<Number, Number> chart = new LineChart<Number, Number>(xAxis, yAxis);
+	private LineChart<Number, Number> chart;
 
 	/**
 	 * Creates a pane to view the chart in.
@@ -53,22 +53,24 @@ public class ChartTab extends TabBase {
 		
 		scatter.setData(data.getData());
 		
+		chart = new LineChart<Number, Number>(xAxis, yAxis);
+		//pane = new ScrollPane(chart);
+		
 		chart.getData().add(scatter);
 		chart.getData().add(line);
 		chart.setLegendVisible(false);
+		//chart.setAnimated(false);
 		setContent(chart);
 	}
 
 	/**
-	 * This means I need to update the line series with just two new
-	 * points which are the result of the min and max x values plugged
-	 * into the regression line.
-	 * But I should also update the scatter plot data when it updates...
+	 * Updates the scatter points and line.
 	 */
 	@Override
 	public void update() {
 	    scatter.setData(data.getData());
 	    line.getData().clear();
+	    if(data.empty()) return;
 		double min = data.stat().min(XYMask.X);
 		double max = data.stat().max(XYMask.X);
 		line.getData().add(new Data<Number, Number>(

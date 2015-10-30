@@ -58,9 +58,9 @@ public class TableBox extends VBox implements Observer {
     public TableBox(DataManager dm) {
         data = dm;
         data.addObserver(this);
-        this.getStyleClass().add("all");
-        this.getStyleClass().add("border-pane");
-        this.setPadding(new Insets(10, 2, 2, 10));
+        //this.getStyleClass().add("all");
+        this.getStyleClass().add("table-box");
+        //this.setPadding(new Insets(10, 2, 2, 10));
 
         Label label = new Label("X|Y Table");
 
@@ -71,13 +71,6 @@ public class TableBox extends VBox implements Observer {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         ScrollPane scpane = new ScrollPane(table);
         scpane.setHbarPolicy(ScrollBarPolicy.NEVER);
-        
-//        Callback<TableColumn<Data<Number, Number>, Double>, TableCell<Data<Number, Number>, Double>> cellFactory =
-//                new Callback<TableColumn<Data<Number, Number>, Double>, TableCell<Data<Number, Number>, Double>>() {
-//                    public TableCell<Data<Number, Number>, Double> call(TableColumn<XYChart.Data<Number, Number>, Double> p) {
-//                        return new EditableTableCell();
-//                    }
-//                };
 
         TableColumn<XYChart.Data<Number, Number>, Double> xCol = new TableColumn<XYChart.Data<Number, Number>, Double>(
                 "X");
@@ -85,7 +78,6 @@ public class TableBox extends VBox implements Observer {
         //xCol.setMinWidth(50);
         xCol.setCellValueFactory(new PropertyValueFactory<XYChart.Data<Number, Number>, Double>(
                 "XValue"));
-        //xCol.setCellFactory(cellFactory);
         xCol.setOnEditCommit(new EventHandler<CellEditEvent<XYChart.Data<Number, Number>, Double>>() {
 
             @Override
@@ -104,7 +96,6 @@ public class TableBox extends VBox implements Observer {
         //yCol.setMinWidth(50);
         yCol.setCellValueFactory(new PropertyValueFactory<XYChart.Data<Number, Number>, Double>(
                 "YValue"));
-        //yCol.setCellFactory(cellFactory);
         yCol.setOnEditCommit(new EventHandler<CellEditEvent<XYChart.Data<Number, Number>, Double>>() {
 
             @Override
@@ -118,8 +109,19 @@ public class TableBox extends VBox implements Observer {
         });
         table.getColumns().addAll(xCol, yCol);
         
+        final Button clearBtn = new Button("Clear All");
+        clearBtn.setOnAction((event)-> {
+                data.clear();
+        });
+        clearBtn.addEventFilter(KeyEvent.KEY_RELEASED,
+                (event)-> {
+                        if (KeyCode.ENTER.equals(event.getCode())) {
+                            clearBtn.fire();
+                        }
+                });
+        
         this.setSpacing(3);
-        this.getChildren().addAll(label, scpane, buildAddPane());
+        this.getChildren().addAll(label, scpane, buildAddPane(), clearBtn);
     }
 
     /**

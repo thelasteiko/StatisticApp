@@ -79,7 +79,7 @@ public class SummaryTab extends TabBase {
 			display.add(text2);
 		}
 		Text equ = new Text();
-		calcBox.add(equ, 1, display.size()+1);
+		calcBox.add(equ, 2, display.size()+1);
 		display.add(equ);
 		setContent(calcBox);
 		//update();
@@ -90,6 +90,11 @@ public class SummaryTab extends TabBase {
 	 */
 	@Override
 	public void update() {
+	    if(data.empty()) {
+	        System.out.println("Data is empty in Summary tab.");
+	        clearall();
+	        return;
+	    }
 		set(0, f(data.stat().n()));
 		set(1, f(data.stat().n()));
 		set(2, f(data.stat().mean(XYMask.X)));
@@ -129,6 +134,12 @@ public class SummaryTab extends TabBase {
 	 */
 	private void set(int index, String stat) {
 		display.get(index).setText(stat);
+	}
+	
+	private void clearall() {
+	    for(Text t: display) {
+	        t.setText("");
+	    }
 	}
 
 }

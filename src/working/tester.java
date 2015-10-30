@@ -1,20 +1,22 @@
 package working;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import scatter.Statistics;
 
 public class tester {
 
     public static void main(String[] args) {
         
-        try {
-            System.out.println(new File(".").getCanonicalPath());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        Statistics stat = new Statistics();
+        
+        double[][] a = {
+                {0, 2},
+                {1, -1}
+        };
+        
+        System.out.println(stat.b(a[0], a[1]));
     }
         
     public static void histogram() {

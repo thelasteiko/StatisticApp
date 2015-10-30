@@ -1,7 +1,5 @@
 package masks;
 
-import java.util.Arrays;
-
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;

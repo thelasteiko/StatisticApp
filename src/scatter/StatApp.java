@@ -38,14 +38,11 @@ public class StatApp extends Application {
         mainholder.setTop(menu);
         mainholder.setLeft(table);
         mainholder.setCenter(tm);
+        mainholder.setMaxSize(850, 600);
         root.getChildren().add(mainholder);
         
         //TODO have a way to load different stylesheets?
-        //TODO compact stylesheets
-        setUserAgentStylesheet(STYLESHEET_MODENA);
-        //scene.getStylesheets().add(getClass().getResource("linechart.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("scatter.css").toExternalForm());
-        
         stage.setScene(scene);
         stage.show();
     }
