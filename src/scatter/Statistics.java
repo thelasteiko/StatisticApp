@@ -218,7 +218,7 @@ public class Statistics<T extends Collection<E>, E> {
     public double b(int input, int output) {
         return b(data.col(input), data.col(output));
     }
-    //TODO change the sorting of values...
+
     public double b(double[] input, double[] output) {
         double sumx = this.sum(input);
         double sumy = this.sum(output);
@@ -391,15 +391,16 @@ public class Statistics<T extends Collection<E>, E> {
      * @return the number of buckets or the size of the buckets.
      */
     public double transform(int c, double s) {
-        //TODO reevaluate how diff is calculated, does not work well with whole numbers
-        /*
-         * If diff is < 2
-         *  diff / s + diff / n()
-         * else
-         *  diff / s + 1
-         */
-        double diff = Math.abs(max(c) - min(c));
-        return diff / s + diff / n();
+        return transform(data.col(c), s);
+    }
+        //TODO reevaluate how diff is calculated, giving too many buckets...
+    public double transform(double[] c, double s) {
+        double diff = max(c) - min(c);
+        double s2 = s-1;
+        if (diff < 1) {
+            return Math.abs(diff / s2 + diff / c.length);
+        } else 
+            return Math.abs(diff / s2);
     }
 
     /**

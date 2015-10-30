@@ -11,12 +11,23 @@ public class tester {
         
         Statistics stat = new Statistics();
         
-        double[][] a = {
-                {0, 2},
-                {1, -1}
+        double[] a = {
+                -2, -1.76, -.54, 0.32, 3, 3.67, 5.32, 6.02, 7, 8.2
         };
+        double[] b = {
+                -.2, -.176, -.54, .032, .3, .367, .532, .602, .7, .82
+        };
+        int buckets = 4;
+        double range = stat.transform(b, buckets);
         
-        System.out.println(stat.b(a[0], a[1]));
+        System.out.println(range);
+        double last = stat.min(b);
+        for (int i = buckets; i > 0; i--) {
+            System.out.print(last + " + " + range + " = ");
+            last += range;
+            System.out.println(last);
+        }
+        System.out.println(last == stat.max(b));
     }
         
     public static void histogram() {

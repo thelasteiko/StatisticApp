@@ -30,7 +30,7 @@ import masks.DataManager;
  *  TODO the chart works basically but needs tweaking on functions
  *      the labels don't work well
  *      the number of buckets or the size isn't matching up to what they should be
- *      presumably because I changed the +1 on transform...
+ *      
  * @author Melinda Robertson
  * @version 20151008
  */
@@ -100,9 +100,9 @@ public class HistogramTab extends TabBase {
         //-------------Action Listeners-----------------------
         size.setOnAction((observable) -> {
             int col = setlist.getSelectionModel().getSelectedIndex();
-            number.setText(String.valueOf(
-                    (int) data.stat().transform(
-                            col, Double.parseDouble(size.getText()))+1));
+            double newsize = data.stat().transform(col, Double.parseDouble(size.getText()));
+            System.out.println(newsize);
+            number.setText(String.valueOf((int) newsize+1));
             update();
         });
         number.setOnAction((observable) -> {
@@ -154,7 +154,9 @@ public class HistogramTab extends TabBase {
             s = data.stat().transform(col, n);
         } else {
             s = Double.parseDouble(size.getText());   //size makes number
-            n = (int) data.stat().transform(col, s) + 1;
+            //TODO with number ranges > 1 this works
+            //for < 1 it has -1 buckets...
+            n = (int) data.stat().transform(col, s);
         }
         NumberFormat DF = new DecimalFormat("#0.#");
         for (int b = 0; b < n; b++) {   //fill data with the frequencies

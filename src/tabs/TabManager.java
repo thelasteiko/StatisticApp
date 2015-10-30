@@ -43,7 +43,6 @@ public class TabManager extends TabPane implements Observer {
 
     @Override
     public void update(java.util.Observable data, Object list) {
-        System.out.println("TabManager has been notified.");
         if(!(data instanceof DataManager)) return;
         for (TabBase b : mytabs) {
             b.update(data, null);
