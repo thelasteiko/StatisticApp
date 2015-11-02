@@ -1,11 +1,12 @@
 package tabs;
 
+import io.DataManager;
+import javafx.collections.FXCollections;
 import javafx.geometry.Side;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
-import masks.DataManager;
 import masks.XYMask;
 /**
  * This is gonna need to change to a line graph.
@@ -52,6 +53,7 @@ public class ChartTab extends TabBase {
 		yAxis.setLabel("Y");
 		
 		scatter.setData(data.getData());
+		line.setData(FXCollections.observableArrayList());
 		
 		chart = new LineChart<Number, Number>(xAxis, yAxis);
 		//pane = new ScrollPane(chart);
@@ -68,7 +70,7 @@ public class ChartTab extends TabBase {
 	 */
 	@Override
 	public void update() {
-	    scatter.setData(data.getData());
+        scatter.setData(data.getData());
 	    line.getData().clear();
 	    if(data.empty()) return;
 		double min = data.stat().min(XYMask.X);
@@ -77,5 +79,9 @@ public class ChartTab extends TabBase {
 		        min, data.stat().predict(XYMask.X, XYMask.Y, min)));
 		line.getData().add(new Data<Number, Number>(
 		        max, data.stat().predict(XYMask.X, XYMask.Y, max)));
+		for(@SuppressWarnings({ "rawtypes", "unused" }) Data e: line.getData()) {
+		    //Why JavaFX, why?
+		    //System.out.println(e.getXValue() + ", " + e.getYValue());
+		}
 	}
 }

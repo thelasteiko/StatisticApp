@@ -1,12 +1,10 @@
-package masks;
-
-import io.FileIO;
-import io.XYChartIO;
+package io;
 
 import java.io.File;
 import java.util.Iterator;
 import java.util.Observable;
 
+import masks.XYMask;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
@@ -32,7 +30,7 @@ public class DataManager extends Observable {
 	/**
 	 * Performs calculations on the data.
 	 */
-	private Statistics<ObservableList<Data<Number, Number>>,Data<Number, Number>> st;
+	private Statistics st;
 	/**
 	 * Creates a new DataManager without adding any data
 	 * to the initial set.
@@ -72,6 +70,7 @@ public class DataManager extends Observable {
 	public void add(double x, double y) {
 		if (data == null) return;
 		XYChart.Data<Number, Number> e = new XYChart.Data<Number, Number>(x, y);
+		//System.out.println(e.getXValue() + ", " + e.getYValue());
 		data.add(e);
 		setChanged();
 		notifyObservers();
@@ -98,7 +97,7 @@ public class DataManager extends Observable {
 	 * Retrieve the statistical data calculator.
 	 * @return the data calculator.
 	 */
-	public Statistics<ObservableList<Data<Number, Number>>,Data<Number, Number>> stat() {
+	public Statistics stat() {
 		return st;
 	}
 	/**
@@ -134,7 +133,7 @@ public class DataManager extends Observable {
 	private void begin(File filename) {
 		data = io.load(filename);
 		XYMask m = new XYMask(data);
-		st = new Statistics<ObservableList<Data<Number, Number>>,Data<Number, Number>>(m);
+		st = new Statistics(m);
 		setChanged();
 		notifyObservers();
 	}

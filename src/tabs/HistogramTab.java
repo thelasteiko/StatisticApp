@@ -1,5 +1,7 @@
 package tabs;
 
+import io.DataManager;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -17,7 +19,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import masks.DataManager;
 
 /**
  * To make this work I need a data set that is specific to frequency.
@@ -29,7 +30,6 @@ import masks.DataManager;
  *  BarChart
  *  TODO the chart works basically but needs tweaking on functions
  *      the labels don't work well
- *      the number of buckets or the size isn't matching up to what they should be
  *      
  * @author Melinda Robertson
  * @version 20151008
@@ -53,6 +53,10 @@ public class HistogramTab extends TabBase {
     private TextField size;
     private TextField number;
     private ComboBox<String> setlist;
+    /**
+     * True if size is the one that changed last. False if it was number.
+     */
+    private boolean sizehaschanged;
     
     /**
      * Creates a tab that has a histogram implemented using a
@@ -68,6 +72,7 @@ public class HistogramTab extends TabBase {
         buildFields();
         
         barchart.setLegendVisible(false);
+        sizehaschanged = false;
         
         mainholder.getChildren().addAll(barchart, fieldbox);
         setContent(mainholder);
@@ -99,13 +104,14 @@ public class HistogramTab extends TabBase {
         
         //-------------Action Listeners-----------------------
         size.setOnAction((observable) -> {
+            sizehaschanged = true;
             int col = setlist.getSelectionModel().getSelectedIndex();
             double newsize = data.stat().transform(col, Double.parseDouble(size.getText()));
-            System.out.println(newsize);
             number.setText(String.valueOf((int) newsize+1));
             update();
         });
         number.setOnAction((observable) -> {
+            sizehaschanged = false;
             int col = setlist.getSelectionModel().getSelectedIndex();
             size.setText(String.valueOf(
                     data.stat().transform(
@@ -118,7 +124,8 @@ public class HistogramTab extends TabBase {
     /**
      * Creates the bar chart and set the series.
      */
-    private void buildChart() {        
+    private void buildChart() {
+        //------------------AXIS----------------------------------------
         //So I have one axis with named things
         final CategoryAxis bounds = new CategoryAxis();
         bounds.setSide(Side.BOTTOM);
@@ -127,7 +134,7 @@ public class HistogramTab extends TabBase {
         final NumberAxis frequencies = new NumberAxis();
         frequencies.setSide(Side.LEFT);
         frequencies.setLabel("Number of Data Points");   //the side; Numbers
-        
+        //--------------------CHART AND SERIES--------------------------------
         //which I add to my chart making sure that the axis' line up with the data type
         barchart = new BarChart<String, Number>(bounds, frequencies);
         buckets = FXCollections.observableList(new LinkedList<Data<String, Number>>());
@@ -140,23 +147,26 @@ public class HistogramTab extends TabBase {
     public void update() {
         buckets.clear();    //clear the current list
         if(data.empty()) return;
+        
+        //--------------------RESET HISTOGRAM-----------------------------
         //defaults showing all values in one bar
-        //n is number of buckets
+        //n is number of buckets, initialize to 1
         int n = 1;
+        //col is the data set
         int col = setlist.getSelectionModel().getSelectedIndex();
-      //s is size of buckets
+        //s is size of buckets, initialize to full range
         double s = data.stat().max(col)-data.stat().min(col);
         //fields will change when
-        //the fields are updated then this will be called        
+        //the fields are updated then this will be called
+        
+        //----------------GET VALUE FROM LAST CHANGED-----------------------
         if (size.getText().isEmpty() && number.getText().isEmpty()) return;
-        else if (size.getText().isEmpty()) {    //get size from number
+        else if (!sizehaschanged) {    //get size from number
             n = Integer.parseInt(number.getText());
             s = data.stat().transform(col, n);
         } else {
             s = Double.parseDouble(size.getText());   //size makes number
-            //TODO with number ranges > 1 this works
-            //for < 1 it has -1 buckets...
-            n = (int) data.stat().transform(col, s);
+            n = (int) data.stat().transform(col, s) + 1;
         }
         NumberFormat DF = new DecimalFormat("#0.#");
         for (int b = 0; b < n; b++) {   //fill data with the frequencies

@@ -1,7 +1,6 @@
 package scatter;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 import masks.StatMask;
 
@@ -11,9 +10,16 @@ import masks.StatMask;
  * @author Melinda Robertson
  * @version 20151026
  */
-public class Statistics<T extends Collection<E>, E> {
+public class Statistics {
 
-    private StatMask<T, E> data;
+    /**
+     * A bridge that returns the appropriate double arrays
+     * that this object needs to compute thingys.
+     * As there is no way to know what kind of underlying data structure
+     * is used, the mask is loaded as a raw type. 
+     */
+    @SuppressWarnings("rawtypes")
+    private StatMask data;
 
     /**
      * Creates a reference for retrieving statistical information. Input data is
@@ -21,7 +27,8 @@ public class Statistics<T extends Collection<E>, E> {
      * 
      * @param data is the data to reference.
      */
-    public Statistics(StatMask<T, E> data) {
+    @SuppressWarnings("rawtypes")
+    public Statistics(StatMask data) {
         this.data = data;
     }
     
@@ -34,7 +41,8 @@ public class Statistics<T extends Collection<E>, E> {
      * 
      * @return the mask holding the source data.
      */
-    public StatMask<T, E> mask() {
+    @SuppressWarnings("rawtypes")
+    public StatMask mask() {
         return data;
     }
      
@@ -53,6 +61,7 @@ public class Statistics<T extends Collection<E>, E> {
      * @return the mean.
      */
     public double mean(double[] a) {
+        Arrays.sort(a);
         double mean = 0;
         for (int i = 0; i < a.length; i++) {
             mean += a[i];
@@ -76,6 +85,7 @@ public class Statistics<T extends Collection<E>, E> {
      * @return the median.
      */
     public double median(double[] a) {
+        Arrays.sort(a);
         double median = 0;
         if (a.length == 2) {
             median = (a[0] + a[1]) / 2;
@@ -104,6 +114,7 @@ public class Statistics<T extends Collection<E>, E> {
      * @return the mode.
      */
     public double mode(double[] a) {
+        Arrays.sort(a);
         double mode = 0;
         double current = a[0];
         int count = 0;
@@ -137,6 +148,7 @@ public class Statistics<T extends Collection<E>, E> {
      * @return the range.
      */
     public double range(double[] a) {
+        Arrays.sort(a);
         return a[a.length - 1] - a[0];
     }
     
@@ -393,14 +405,10 @@ public class Statistics<T extends Collection<E>, E> {
     public double transform(int c, double s) {
         return transform(data.col(c), s);
     }
-        //TODO reevaluate how diff is calculated, giving too many buckets...
     public double transform(double[] c, double s) {
-        double diff = max(c) - min(c);
-        double s2 = s-1;
-        if (diff < 1) {
-            return Math.abs(diff / s2 + diff / c.length);
-        } else 
-            return Math.abs(diff / s2);
+        double diff = (max(c) - min(c)) / s;
+        double ret =  Math.abs(diff + (diff *.01));
+        return ret;
     }
 
     /**
